@@ -1,0 +1,49 @@
+-- Create the schema for medicines
+CREATE TABLE medicines (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  category_id UUID REFERENCES categories(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL,
+  price FLOAT NOT NULL
+);
+
+-- Create the schema for categories
+CREATE TABLE categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL
+);
+
+-- Create the schema for requests
+CREATE TABLE requests (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  medicine_id UUID REFERENCES medicines(id) ON DELETE CASCADE,
+  patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'Pending'
+);
+
+-- Create the schema for users
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  username TEXT NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'Patient'
+);
+
+-- Create the schema for patients
+CREATE TABLE patients (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  address TEXT NOT NULL
+);
+
+-- Create the schema for admins
+CREATE TABLE admins (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  address TEXT NOT NULL
+);
+
+
