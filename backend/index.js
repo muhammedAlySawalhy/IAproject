@@ -1,4 +1,4 @@
-require = require("esm")(module /*, options*/);
+require("esm")(module /*, options*/);
 
 const express = require("express");
 const cors = require("cors");
@@ -11,8 +11,13 @@ app.use(bodyParser.json());
 
 // Import and use the routes
 const userRoutes = require("./routes/user");
-app.use("/api/users", userRoutes);
-
+const patientRoutes = require("./routes/patient");
+const adminRoutes = require("./routes/admin");
+const categoryRoutes = require("./routes/category");
+app.use("/api/user", userRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/admins", adminRoutes);
+app.use("/api/categories", categoryRoutes);
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

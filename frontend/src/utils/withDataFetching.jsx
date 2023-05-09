@@ -5,12 +5,11 @@ function withDataFetching(WrappedComponent, url) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const prefix = "http://localhost:5000";
-    let sent = prefix + url;
+
     useEffect(() => {
-      async function fetchData() {
+      const fetchData = async () => {
         try {
-          const response = await fetch(sent);
+          const response = await fetch(`http://localhost:5000${url}`);
           if (!response.ok) {
             throw new Error(response.statusText);
           }
@@ -18,20 +17,15 @@ function withDataFetching(WrappedComponent, url) {
           setData(responseData);
           setLoading(false);
         } catch (error) {
-          setError(error);
-          setLoading(false);
+          setError(err.message);
         }
-      }
+      };
       fetchData();
     }, [url]);
 
-    return (
-      <div>
-        {loading && <p>Loading data...</p>}
-        {error && <p>There was an error fetching data.</p>}
-        {!loading && !error && <WrappedComponent data={data} {...props} />}
-      </div>
-    );
+    if (loading) return <p>Loading data...</p>;
+    if (error) return <p>There was an error fetching data.</p>;
+    return <WrappedComponent data={data} {...props} />;
   };
 }
 

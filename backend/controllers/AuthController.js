@@ -1,31 +1,57 @@
 import pool from "./dbController";
 
 const createUser = async (user) => {
-  const { username, email, password } = user;
+  const { username, password } = user;
 
   const query = {
-    text: "INSERT INTO Users(username, email, password) VALUES($1, $2, $3)",
-    values: [username, email, password],
+    text: "INSERT INTO usertable(username,  password) VALUES($1, $2)",
+    values: [username, password],
   };
   try {
     await pool.query(query);
-    return { success: true, message: `User ${username} created` };
   } catch (err) {
     console.error(err.message);
     return { success: false, message: "Error creating user" };
+  }
+  return { success: true, message: `User ${username} created` };
+};
+const createPatient = async (patient) => {
+  const { name, email, userId } = patient;
+
+  // Validate the name field
+  if (!name) {
+    return { success: false, message: "Name is required" };
+  }
+  if (!userId) {
+    return { success: false, message: "user Id is required" };
+  }
+  const query = {
+    text: "INSERT INTO patient(name, email, user_id) VALUES($1, $2, $3)",
+    values: [name, email, userId],
+  };
+  try {
+    const result = await pool.query(query);
+    return {
+      success: true,
+      message: `Patient ${name} created with ID ${result.rows[0].id}`,
+      id: result.rows[0].id,
+    };
+  } catch (err) {
+    console.error(err.message);
+    return { success: false, message: "Error creating patient" };
   }
 };
 
 const getUser = async (username) => {
   const query = {
-    text: "SELECT * FROM Users WHERE username=$1",
-    values: [username],
+    text: "SELECT * FROM usertable WHERE LOWER(username)=$1",
+    values: [username.toLowerCase()],
   };
 
   try {
     const data = await pool.query(query);
     if (!data.rows[0]) {
-      return { success: false, message: "user not found", status: 404 };
+      return { success: false, message: "User not found", status: 404 };
     }
 
     return { success: true, data: data.rows[0], status: 200 };
@@ -38,7 +64,7 @@ const getUser = async (username) => {
 const updateUser = async (user) => {
   const { id, username, email, password } = user;
   const query = {
-    text: "UPDATE Users SET username=$2, email=$3, password=$4 WHERE id=$1",
+    text: "UPDATE user SET username=$2, email=$3, password=$4 WHERE id=$1",
     values: [id, username, email, password],
   };
   try {
@@ -52,7 +78,7 @@ const updateUser = async (user) => {
 
 const deleteUser = async (id) => {
   const query = {
-    text: "DELETE FROM Users WHERE id=$1",
+    text: "DELETE FROM user WHERE id=$1",
     values: [id],
   };
   try {
@@ -69,4 +95,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  createPatient,
 };

@@ -6,7 +6,7 @@ import "./index.css";
 import App from "app/app";
 import ErrorPage from "./app/error-page";
 import LoginForm from "./pages/LoginForm";
-import { Dashboard, DashboardUser, DashboardAdmin } from "./pages";
+import { Dashboard, DashboardPatient, DashboardAdmin } from "./pages";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,11 +23,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard/user",
-    element: <DashboardUser />,
+    element: <DashboardPatient />,
   },
   {
     path: "/dashboard/admin",
     element: <DashboardAdmin />,
+  },
+  {
+    path: "/patients",
+    element: <Dashboard />,
   },
 ]);
 

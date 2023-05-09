@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MyCard, MyFormGroup, MyInputGroup, MyButton } from "components";
 import withDataPosting from "../utils/withDataPosting";
+interface FormState {
+  username: string;
+  password: string;
+}
 
 const LoginForm: React.FC = (props) => {
   const { postData, data, loading, error } = props;
   const navigate = useNavigate();
-
-  interface FormState {
-    username: string;
-    password: string;
-  }
 
   const [formState, setFormState] = useState<FormState>({
     username: "",
@@ -57,13 +56,21 @@ const LoginForm: React.FC = (props) => {
           {loading ? "Loading..." : "Submit"}
         </MyButton>
       </form>
-      {console.log(data)}
-      {data && (
+      {!error && data.is_admin && (
         <>
-          <h2>login Successful!</h2>
+          <h2>login Successful for admin!</h2>
 
-          <MyButton onClick={() => navigate("/dashboard")}>
-            Go to Login Page
+          <MyButton onClick={() => navigate("/dashboard/admin")}>
+            Go to Dashboard
+          </MyButton>
+        </>
+      )}{" "}
+      {!error && !data.is_admin && (
+        <>
+          <h2>login Successful for admin!</h2>
+
+          <MyButton onClick={() => navigate("/dashboard/user")}>
+            Go to Dashboard
           </MyButton>
         </>
       )}
@@ -72,4 +79,4 @@ const LoginForm: React.FC = (props) => {
   );
 };
 
-export default withDataPosting(LoginForm, "/api/users/login");
+export default withDataPosting(LoginForm, "/api/user/login");

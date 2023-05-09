@@ -1,49 +1,55 @@
--- Create the schema for medicines
-CREATE TABLE medicines (
+-- Create the schema for medicine
+CREATE TABLE medicine(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
-  category_id UUID REFERENCES categories(id) ON DELETE CASCADE,
-  quantity INTEGER NOT NULL,
-  price FLOAT NOT NULL
+  category_id UUID REFERENCES category(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL
 );
 
 -- Create the schema for categories
-CREATE TABLE categories (
+CREATE TABLE category(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL
 );
 
--- Create the schema for requests
-CREATE TABLE requests (
+-- Create the schema for request
+CREATE TABLE request(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  medicine_id UUID REFERENCES medicines(id) ON DELETE CASCADE,
-  patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
-  quantity INTEGER NOT NULL,
-  status TEXT NOT NULL DEFAULT 'Pending'
+  medicine_id UUID REFERENCES medicine(id) ON DELETE CASCADE,
+  patient_id UUID REFERENCES patient(id) ON DELETE CASCADE
 );
 
--- Create the schema for users
-CREATE TABLE users (
+-- Create the schema for user
+
+CREATE TABLE USERTABLE(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   username TEXT NOT NULL,
   password TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'Patient'
+  role TEXT NOT NULL DEFAULT 'Patient',
+  is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
--- Create the schema for patients
-CREATE TABLE patients (
+CREATE TABLE admin (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   email TEXT NOT NULL,
-  address TEXT NOT NULL
+  user_id UUID NOT NULL UNIQUE,
+  FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );
 
--- Create the schema for admins
-CREATE TABLE admins (
+CREATE TABLE patient (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   email TEXT NOT NULL,
-  address TEXT NOT NULL
+  user_id UUID NOT NULL UNIQUE,
+  medicine TEXT[],
+  FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );
 
+CREATE TABLE history (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_type TEXT NOT NULL,
+  event_timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+  event_payload JSONB NOT NULL
+);
 

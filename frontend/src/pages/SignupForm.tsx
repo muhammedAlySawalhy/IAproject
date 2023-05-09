@@ -1,24 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MyCard, MyFormGroup, MyInputGroup, MyButton } from "components";
-import withDataPosting from "../utils/withDataPosting";
+import withDataPosting from "utils/withDataPosting";
 
 const SignupForm: React.FC = (props) => {
   const { postData, data, loading, error } = props;
   const navigate = useNavigate();
+
   interface FormState {
     username: string;
-    // age: number;
     password: string;
     email: string;
   }
 
   const [formState, setFormState] = useState<FormState>({
     username: "",
-    // age: 0,
     password: "",
     email: "",
   });
+  const [showGoToLoginButton, setShowGoToLoginButton] = useState(false);
+
+  useEffect(() => {
+    if (data && !error && !loading) {
+      console.log("done");
+      setShowGoToLoginButton(true);
+    }
+  }, [data, error, loading]);
 
   function handleChange<K extends keyof FormState>(key: K) {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +38,6 @@ const SignupForm: React.FC = (props) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // handle form submission logic here, using the current values of username, password, and email
     await postData(formState);
   };
 
@@ -65,29 +71,25 @@ const SignupForm: React.FC = (props) => {
             className="w-full bg-gray-100"
           />
         </MyFormGroup>
-        {/* <MyFormGroup label="Age" labelFor="age-input">
-          <MyInputGroup
-            placeholder="please enter your age"
-            value={age}
-            onChange={handleAgeChange}
-          />
-        </MyFormGroup> */}
         <MyButton type="submit" intent="primary" className="w-full">
           {loading ? "Loading..." : "Submit"}
         </MyButton>
       </form>{" "}
-      {data && (
-        <>
-          <h2>Registration Successful!</h2>
+      {showGoToLoginButton && (
+        <div>
           <p>You have been successfully registered.</p>
-
-          <MyButton onClick={() => navigate("/login")}>
-            Go to Login Page
+          <MyButton
+            onClick={() => navigate("/login")}
+            intent="primary"
+            className="w-full"
+          >
+            Go to Login
           </MyButton>
-        </>
+        </div>
       )}
-      {error && <p>There was an error posting data.</p>}
+      {error !== "noError" ? <p>{error}</p> : <></>}
     </MyCard>
   );
 };
-export default withDataPosting(SignupForm, "/api/users/signup");
+
+export default withDataPosting(SignupForm, "/api/user/signup");

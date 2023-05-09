@@ -2,3 +2,8 @@ export { MyButton } from "./MyButton";
 export { MyCard } from "./MyCard";
 export { MyFormGroup } from "./MyFormGroup";
 export { MyInputGroup } from "./MyInputGroup";
+export { GroupMedicine } from "./GroupMedicines";
+export { MedicineRequest } from "./MedicineRequest";
+export { PatientsHelpReq } from "./PatientsHelpReq";
+export { HelpDoc } from "./HelpDoc";
+export { SideBar } from "./SideBar";

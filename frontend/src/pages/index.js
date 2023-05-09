@@ -1,3 +1,3 @@
 export { DashboardAdmin } from "./DashboardAdmin";
-export { DashboardUser } from "./DashboardUser";
+export { DashboardPatient } from "./DashboardPatient";
 export { Dashboard } from "./Dashboard";
